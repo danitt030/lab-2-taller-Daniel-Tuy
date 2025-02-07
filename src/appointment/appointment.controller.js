@@ -2,6 +2,7 @@ import Pet from "../pet/pet.model.js";
 import Appointment from "../appointment/appointment.model.js";
 import { parse } from "date-fns";
 
+
 export const saveAppointment = async (req, res) => {
   try {
     const data = req.body;
@@ -56,3 +57,23 @@ export const saveAppointment = async (req, res) => {
     }); 
   }
 };
+
+export const cancelAppointment = async (req, res) => {
+    try{
+        const { aid } = req.params
+        
+        const Appointment = await Appointment.findByIdAndUpdate(aid, {status: "CANCELLED"}, {new: true})
+
+        return res.status(200).json({
+            success: true,
+            message: "La cita fue cancelada",
+            Appointment
+        })
+    }catch(err){
+        return res.status(500).json({
+            success: false,
+            message: "Hay un error al momento de cancelar la cita",
+            error: err.message
+        })
+    }
+}
